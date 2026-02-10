@@ -142,7 +142,5 @@ Recommended backup strategies:
 
 ---
 
-## Contact
-For deployment questions, contact the maintainer/team.
 
----
+
