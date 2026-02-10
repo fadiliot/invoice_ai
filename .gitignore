@@ -1,0 +1,10 @@
+.env
+venv/
+__pycache__/
+*.pyc
+uploads/
+node_modules/
+frontend/node_modules/
+frontend/dist/
+app/frontend_dist/
+postgres_data/

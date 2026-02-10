@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f4f6f9;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            width: 500px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #0077ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #005fd1;
+        }
+
+        table {
+            margin-top: 30px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #0077ff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Invoice Processing System</h1>
+
+<div class="card">
+    <input type="file" id="files" multiple accept=".png,.jpg,.jpeg,.pdf">
+    <br><br>
+    <button onclick="uploadFiles()">Upload Invoices</button>
+</div>
+
+<table id="resultsTable" style="display:none;">
+    <thead>
+        <tr>
+            <th>Invoice ID</th>
+            <th>Status</th>
+            <th>QuickBooks ID</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+async function uploadFiles() {
+    const files = document.getElementById("files").files;
+
+    if (!files.length) {
+        alert("Please select files.");
+        return;
+    }
+
+    const formData = new FormData();
+
+    for (let file of files) {
+        formData.append("files", file);
+    }
+
+    const response = await fetch("/upload-invoices", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await response.json();
+
+    const table = document.getElementById("resultsTable");
+    const tbody = table.querySelector("tbody");
+    tbody.innerHTML = "";
+
+    data.results.forEach(result => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${result.invoice_id}</td>
+            <td>${result.status}</td>
+            <td>${result.quickbooks_id || "-"}</td>
+        `;
+
+        tbody.appendChild(row);
+    });
+
+    table.style.display = "table";
+}
+</script>
+
+</body>
+</html>
